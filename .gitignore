@@ -1,0 +1,23 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+
+# Credentials
+.env
+kubeconfig
+*.pem
+*.key
+
+# Dependencies and build output
+node_modules/
+dist/
+bin/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+
