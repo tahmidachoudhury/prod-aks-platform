@@ -1,4 +1,11 @@
 terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "5.0.1"
+    }
+  }
+
   backend "azurerm" {
     resource_group_name  = "rg-tfstate"
     storage_account_name = "prodaks2048tfstate"
@@ -7,4 +14,8 @@ terraform {
     use_azuread_auth     = true
     use_oidc             = true
   }
+}
+
+provider "azurerm" {
+  # Configuration options
 }
