@@ -17,5 +17,10 @@ variable "location" {
 variable "rg_name" {
   description = "Resource group name for all resources managed by terraform"
   type        = string
-  default     = "rg-aks-platform-prod"
+}
+
+variable "pod_cidr" {
+  description = "CIDR for pod IPs (CNI Overlay). Must not overlap the VNet or service CIDR."
+  type        = string
+  default     = "10.244.0.0/16"
 }
