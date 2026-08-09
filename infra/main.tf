@@ -22,3 +22,12 @@ module "networking" {
   # Subnet /22 gives headroom for any node pool scaling
   address_prefix_snet = ["10.1.0.0/22"]
 }
+
+module "kubernetes" {
+  source       = "./modules/kubernetes"
+  rg_location  = azurerm_resource_group.app.location
+  rg_name      = azurerm_resource_group.app.name
+  subnet_id    = module.networking.vnet_subnet_id
+  project_name = var.project_name
+  environment  = var.environment
+}
