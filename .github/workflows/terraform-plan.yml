@@ -16,6 +16,7 @@ permissions:
 jobs:
   terraform-plan:
     name: Terraform Plan
+    environment: prod
     runs-on: ubuntu-latest
     defaults:
       run:
