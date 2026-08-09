@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "app" {
-  name     = "rg_aks_platorm-prod"
+  name     = "rg-aks-platform-prod"
   location = var.location
 
   tags = {

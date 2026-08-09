@@ -29,7 +29,7 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   default_node_pool {
     name                 = "system"
-    vm_size              = var.node_vm_size # Standard_D2s_v5
+    vm_size              = var.node_vm_size
     vnet_subnet_id       = var.subnet_id
     auto_scaling_enabled = true
     min_count            = 1
@@ -51,6 +51,7 @@ resource "azurerm_kubernetes_cluster" "main" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     network_policy      = "cilium" # Azure CNI powered by Cilium. I might need to drop this if the Cilium agent takes up too many resources
+    network_data_plane  = "cilium"
     load_balancer_sku   = "standard"
     pod_cidr            = var.pod_cidr
     service_cidr        = var.service_cidr

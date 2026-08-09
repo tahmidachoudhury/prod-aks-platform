@@ -28,7 +28,7 @@ variable "rg_name" {
 variable "node_vm_size" {
   description = "VM size for the default node pool."
   type        = string
-  default     = "Standard_D2s_v5"
+  default     = "Standard_D2ns_v6"
 }
 
 variable "subnet_id" {
@@ -39,7 +39,7 @@ variable "subnet_id" {
 variable "kubernetes_version" {
   description = "Kubernetes minor version for the cluster, e.g. 1.31. Patch version is selected by AKS."
   type        = string
-  default     = "1.31"
+  default     = "1.35"
 }
 
 variable "pod_cidr" {
