@@ -1,0 +1,76 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    environment: prod
+
+    # Prevents two pipelines from running simultaneously and one being cancelled
+    concurrency:
+      group: terraform-apply-prod
+      cancel-in-progress: false
+
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          terraform init -reconfigure
+
+      - name: Terraform Plan
+        run: |
+          set +e
+          terraform plan \
+            -var-file=envs/dev.tfvars \
+            -out=tfplan
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -eq 1 ]; then
+            echo "Terraform plan failed with error"
+            exit 1
+          fi
+          exit 0
+
+      - name: Terraform Apply
+        run: terraform apply -var-file="envs/dev.tfvars" --auto-approve tfplan
+
+      - name: Terraform Output
+        run: terraform output
+        continue-on-error: true
+
+  health-check:
+    name: Post-Deploy Health Check
+    needs: terraform-apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Wait for ArgoCD sync
+        run: |
+          argocd app wait whoami \
+            --health --sync \
+            --timeout 300
