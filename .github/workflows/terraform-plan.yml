@@ -1,0 +1,77 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        continue-on-error: false
+
+      - name: Terraform Init
+        run: |
+          terraform init -reconfigure
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Run tflint
+        run: |
+          tflint --init
+          tflint --recursive || true
+
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: ./infra
+          severity: CRITICAL,HIGH
+          exit-code: 0
+          format: table
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan \
+            -var-file=envs/dev.tfvars \
+        continue-on-error: true
+
+      - name: Check plan status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1

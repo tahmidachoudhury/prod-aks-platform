@@ -4,6 +4,7 @@
 *.tfstate.*
 *.tfvars
 *.tfplan
+!dev.tfvars
 
 # Credentials
 .env
