@@ -9,12 +9,18 @@ variable "environment" {
   type        = string
 }
 
+variable "rg_dns_name" {
+  description = "The name of the resource group for the DNS resources - pre-provisioned in the Azure Portal."
+  type        = string
+  default     = "rg-dns"
+}
+
 variable "rg_name" {
-  description = "The name of the resource group for the DNS and all resources managed by Terraform."
+  description = "The name of the resource group for all resources managed by Terraform."
   type        = string
 }
 
-variable "rg_location" {
+variable "location" {
   description = "The Azure region for the External DNS service."
   type        = string
 }

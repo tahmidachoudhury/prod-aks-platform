@@ -5,7 +5,7 @@
 resource "azurerm_user_assigned_identity" "aks" {
   name                = "id-${var.cluster_name}"
   resource_group_name = var.rg_name
-  location            = var.rg_location
+  location            = var.location
   tags = {
     project_name = var.project_name
     environment  = var.environment
@@ -20,7 +20,7 @@ resource "azurerm_role_assignment" "aks_network" {
 
 resource "azurerm_kubernetes_cluster" "main" {
   name                = var.cluster_name
-  location            = var.rg_location
+  location            = var.location
   resource_group_name = var.rg_name
   dns_prefix          = var.cluster_name
   node_resource_group = "${var.rg_name}-nodes"
@@ -72,4 +72,6 @@ resource "azurerm_kubernetes_cluster" "main" {
   lifecycle {
     ignore_changes = [default_node_pool[0].node_count]
   }
+
+  node_provisioning_profile { mode = "Manual" }
 }

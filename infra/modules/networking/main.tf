@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network" "main" {
   name                = var.vnet_name
-  location            = var.rg_location
+  location            = var.location
   resource_group_name = var.rg_name
   address_space       = var.address_space
 
@@ -20,7 +20,7 @@ resource "azurerm_subnet" "aks_nodes" {
 resource "azurerm_network_security_group" "aks_nodes" {
   name                = "nsg-aks-nodes"
   resource_group_name = var.rg_name
-  location            = var.rg_location
+  location            = var.location
   tags = {
     project_name = var.project_name
     environment  = var.environment

@@ -14,7 +14,7 @@ module "networking" {
   snet_name    = "snet-aks-nodes"
   project_name = var.project_name
   environment  = var.environment
-  rg_location  = azurerm_resource_group.app.location
+  location     = var.location
   rg_name      = azurerm_resource_group.app.name
   pod_cidr     = var.pod_cidr
   # CIDR range for VNet - default to 10.1.0.0/16 because AKS defaults service CIDR to 10.0.0.0/16
@@ -25,9 +25,19 @@ module "networking" {
 
 module "kubernetes" {
   source       = "./modules/kubernetes"
-  rg_location  = azurerm_resource_group.app.location
+  location     = var.location
   rg_name      = azurerm_resource_group.app.name
   subnet_id    = module.networking.vnet_subnet_id
   project_name = var.project_name
   environment  = var.environment
+}
+
+module "dns" {
+  source          = "./modules/dns"
+  project_name    = var.project_name
+  environment     = var.environment
+  rg_name         = azurerm_resource_group.app.name
+  location        = var.location
+  dns_zone_name   = var.dns_zone_name
+  oidc_issuer_url = module.kubernetes.oidc_issuer_url
 }

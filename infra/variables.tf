@@ -1,7 +1,6 @@
 variable "project_name" {
   description = "The name of the project. Used as a prefix for all resource names."
   type        = string
-  default     = "prod-2048-aks-app"
 }
 
 variable "environment" {
@@ -11,17 +10,21 @@ variable "environment" {
 
 variable "location" {
   description = "Azure region"
-  default     = "uksouth"
+  type        = string
 }
 
 variable "rg_name" {
   description = "Resource group name for all resources managed by terraform"
   type        = string
-  default     = "rg-2048-aks-tf"
 }
 
 variable "pod_cidr" {
   description = "CIDR for pod IPs (CNI Overlay). Must not overlap the VNet or service CIDR."
   type        = string
   default     = "10.244.0.0/16"
+}
+
+variable "dns_zone_name" {
+  description = "The DNS record assigned to the project"
+  type        = string
 }

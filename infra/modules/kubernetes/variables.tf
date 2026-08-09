@@ -15,7 +15,7 @@ variable "cluster_name" {
   default     = "prod-aks-app"
 }
 
-variable "rg_location" {
+variable "location" {
   description = "The Azure region for the VNet and subnet."
   type        = string
 }

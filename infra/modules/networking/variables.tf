@@ -19,7 +19,7 @@ variable "snet_name" {
   type        = string
 }
 
-variable "rg_location" {
+variable "location" {
   description = "The Azure region for the VNet and subnet."
   type        = string
 }
