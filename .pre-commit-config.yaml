@@ -24,15 +24,15 @@ repos:
       - id: terraform-docs-go
         args: ["markdown", "table", "--output-file", "README.md", "./docs"]
 
-  # # Terraform security scanning
-  # - repo: https://github.com/bridgecrewio/checkov
-  #   rev: 3.3.9
-  #   hooks:
-  #     - id: checkov
-  #       args:
-  #         - --framework=terraform
-  #         - --quiet
-  #         - --compact
+  # Terraform security scanning
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: 3.3.9
+    hooks:
+      - id: checkov
+        args:
+          - --framework=terraform
+          - --quiet
+          - --compact
 
 #   # Terraform validation and linting
 #   - repo: https://github.com/antonbabenko/pre-commit-terraform
