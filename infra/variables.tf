@@ -17,6 +17,7 @@ variable "location" {
 variable "rg_name" {
   description = "Resource group name for all resources managed by terraform"
   type        = string
+  default     = "rg-2048-aks-tf"
 }
 
 variable "pod_cidr" {

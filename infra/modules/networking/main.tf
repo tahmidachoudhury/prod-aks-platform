@@ -34,6 +34,7 @@ resource "azurerm_subnet_network_security_group_association" "aks_nodes" {
 
 resource "azurerm_network_security_rule" "allow_https" {
   # checkov:skip=CKV_AZURE_160
+  # Come back to redirect traffic from http to https
   name                        = "AllowHTTPSInbound"
   priority                    = 100
   direction                   = "Inbound"

@@ -25,7 +25,7 @@ variable "rg_location" {
 }
 
 variable "rg_name" {
-  description = "The name of the resource group for the VNet and subnet."
+  description = "The name of the resource group for the VNet and subnet and all resources managed by Terraform."
 }
 
 variable "address_space" {
