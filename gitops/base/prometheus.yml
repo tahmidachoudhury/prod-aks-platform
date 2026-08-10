@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: monitoring-kube-prometheus-prometheus
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack-prometheus
+spec:
+  replicas: 1
+  serviceAccountName: monitoring-kube-prometheus-prometheus
+  retention: 6h
+  scrapeInterval: 30s
+  evaluationInterval: 30s
+  resources:
+    requests:
+      cpu: 50m
+      memory: 384Mi
+    limits:
+      memory: 768Mi
+  serviceMonitorSelector: {}
+  serviceMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  podMonitorNamespaceSelector: {}
+  ruleSelector: {}
+  ruleNamespaceSelector: {}
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 2000
+  portName: http-web
