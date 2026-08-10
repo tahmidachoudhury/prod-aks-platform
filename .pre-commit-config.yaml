@@ -33,7 +33,7 @@ repos:
           - --framework=terraform
           - --quiet
           - --compact
-          - --soft-fail=true
+          - --soft-fail
 
 #   # Terraform validation and linting
 #   - repo: https://github.com/antonbabenko/pre-commit-terraform
