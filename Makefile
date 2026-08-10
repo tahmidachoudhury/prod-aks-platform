@@ -4,8 +4,8 @@ init: ## terraform init on every stack
 	cd infra/argocd    && terraform init
 
 up:
-	cd infra/platform && terraform apply -auto-approve -var-file=./infra/envs/dev.tfvars
-	cd infra/argocd   && terraform apply -auto-approve -var-file=dev.tfvars
+	cd infra/platform && terraform apply -auto-approve -var-file=./infra/platform/envs/dev.tfvars
+	cd infra/argocd   && terraform apply -auto-approve -var-file=/infra/argocd/envs/dev.tfvars
 
 down:
 	cd infra/platform && terraform destroy -auto-approve -var-file=./infra/envs/dev.tfvars
