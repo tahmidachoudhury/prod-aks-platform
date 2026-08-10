@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Azure identifiers in GitOps manifests are not credentials"
+paths = [
+  '''gitops/.*''',
+  '''infra/.*\.tfvars\.example''',
+]
