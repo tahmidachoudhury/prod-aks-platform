@@ -22,7 +22,7 @@ spec:
           labels:
             azure.workload.identity/use: "true"
           annotations:
-            azure.workload.identity/client-id: "20656328-2a29-46f0-9ac4-4a844a2c875a"
+            azure.workload.identity/client-id: "fb9ff681-7000-44ed-b1df-ab1eaaea7f25"
         podLabels:
           azure.workload.identity/use: "true"
         extraVolumes:

@@ -33,11 +33,7 @@ module "kubernetes" {
 }
 
 module "dns" {
-  source          = "./modules/dns"
-  project_name    = var.project_name
-  environment     = var.environment
-  rg_name         = azurerm_resource_group.app.name
-  location        = var.location
-  dns_zone_name   = var.dns_zone_name
-  oidc_issuer_url = module.kubernetes.oidc_issuer_url
+  source                   = "./modules/dns"
+  oidc_issuer_url          = module.kubernetes.oidc_issuer_url
+  external_dns_identity_id = var.external_dns_identity_id
 }

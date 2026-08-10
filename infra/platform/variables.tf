@@ -28,3 +28,8 @@ variable "dns_zone_name" {
   description = "The DNS record assigned to the project"
   type        = string
 }
+
+variable "external_dns_identity_id" {
+  description = "Stable client ID from bootstrapped DNS resource blocks"
+  type        = string
+}
