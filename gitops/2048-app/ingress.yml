@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 2048-app
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - 2048.azure.tahmidchoudhury.uk
+      secretName: 2048-app-tls
+  rules:
+    - host: 2048.azure.tahmidchoudhury.uk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: 2048-app
+                port:
+                  number: 80
