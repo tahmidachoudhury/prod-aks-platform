@@ -1,0 +1,1 @@
+# ArgoCD Applications land here
