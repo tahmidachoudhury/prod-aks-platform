@@ -15,7 +15,7 @@ spec:
       priorityClassName: app-workload
       containers:
         - name: 2048-app
-          image: 2048-app.azurecr.io/acrtahmidaks:latest
+          image: acrtahmidaks.azurecr.io/2048-app:1922212b4405e6e35bdf4cb59f5e663b1eec929a
           ports:
             - containerPort: 8080
           securityContext:
