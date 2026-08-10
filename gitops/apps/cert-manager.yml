@@ -15,7 +15,8 @@ spec:
       values: |
         crds:
           enabled: true
-        priorityClassName: platform
+        global:
+          priorityClassName: platform
         resources:
           requests:
             cpu: 20m
