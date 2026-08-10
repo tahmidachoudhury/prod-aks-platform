@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2048-app
+  name: app-2048
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 2048-app
+      app: app-2048
   template:
     metadata:
       labels:
-        app: 2048-app
+        app: app-2048
     spec:
       priorityClassName: app-workload
       containers:
-        - name: 2048-app
+        - name: app-2048
           image: acrtahmidaks.azurecr.io/2048-app:1922212b4405e6e35bdf4cb59f5e663b1eec929a
           ports:
             - containerPort: 8080

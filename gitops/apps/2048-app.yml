@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 2048-app
+  name: app-2048
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "3"
@@ -13,7 +13,7 @@ spec:
     path: gitops/2048-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: 2048-app
+    namespace: app-2048
   syncPolicy:
     automated:
       prune: true
