@@ -17,7 +17,6 @@ resource "helm_release" "argocd" {
     configs = {
       params = {
         # Ingress and TLS come later; run the server insecure behind
-        # port-forward until ticket 21 decides how to expose it.
         "server.insecure" = true
       }
     }
@@ -66,46 +65,4 @@ resource "helm_release" "argocd" {
       }
     }
   })]
-}
-
-# App-of-apps root. The only Application Terraform owns.
-resource "kubernetes_manifest" "root_app" {
-  depends_on = [helm_release.argocd]
-
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-
-    metadata = {
-      name       = "root"
-      namespace  = "argocd"
-      finalizers = ["resources-finalizer.argocd.argoproj.io"]
-    }
-
-    spec = {
-      project = "default"
-
-      source = {
-        repoURL        = var.gitops_repo_url
-        targetRevision = var.gitops_revision
-        path           = var.gitops_path
-        directory = {
-          recurse = true
-        }
-      }
-
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "argocd"
-      }
-
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = true
-        }
-        syncOptions = ["CreateNamespace=true"]
-      }
-    }
-  }
 }

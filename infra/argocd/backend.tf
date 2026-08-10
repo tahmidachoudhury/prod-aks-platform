@@ -10,10 +10,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 3.0"
     }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.35"
-    }
   }
 
   backend "azurerm" {
@@ -46,11 +42,4 @@ provider "helm" {
     client_key             = base64decode(local.kube.client_key)
     cluster_ca_certificate = base64decode(local.kube.cluster_ca_certificate)
   }
-}
-
-provider "kubernetes" {
-  host                   = local.kube.host
-  client_certificate     = base64decode(local.kube.client_certificate)
-  client_key             = base64decode(local.kube.client_key)
-  cluster_ca_certificate = base64decode(local.kube.cluster_ca_certificate)
 }
