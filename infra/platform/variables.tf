@@ -33,3 +33,13 @@ variable "external_dns_identity_id" {
   description = "Stable client ID from bootstrapped DNS resource blocks"
   type        = string
 }
+
+variable "acr_name" {
+  description = "Name of the ACR repository that stores the 2048 app images"
+  type        = string
+}
+
+variable "acr_resource_group_name" {
+  description = "Resource group name that the ACR belongs to."
+  type        = string
+}

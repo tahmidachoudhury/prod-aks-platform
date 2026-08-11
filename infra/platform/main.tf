@@ -32,6 +32,18 @@ module "kubernetes" {
   environment  = var.environment
 }
 
+data "azurerm_container_registry" "main" {
+  name                = var.acr_name
+  resource_group_name = var.acr_resource_group_name
+}
+
+resource "azurerm_role_assignment" "kubelet_acr_pull" {
+  principal_id                     = module.kubernetes.kubelet_identity_object_id
+  role_definition_name             = "AcrPull"
+  scope                            = data.azurerm_container_registry.main.id
+  skip_service_principal_aad_check = true
+}
+
 module "dns" {
   source                   = "./modules/dns"
   oidc_issuer_url          = module.kubernetes.oidc_issuer_url

@@ -11,3 +11,6 @@ project_name = "prod-2048-aks-app"
 location = "uksouth"
 
 external_dns_identity_id = "/subscriptions/b61b10b2-15e4-43e2-8bd9-95a554e2249d/resourceGroups/bootstrap-resources/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-external-dns"
+
+acr_name                = "acrtahmidaks"
+acr_resource_group_name = "bootstrap-resources"
