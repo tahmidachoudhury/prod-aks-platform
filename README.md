@@ -89,9 +89,9 @@ Three Terraform stacks with separate state keys, split by lifecycle rather than 
 
 **Terraform state.** Held in a storage account with public access disabled, shared key access disabled, Entra ID authentication only, blob versioning and soft delete enabled. Locking uses native blob leases — Azure needs no DynamoDB equivalent.
 
-**Scanning.** Checkov on Terraform and Trivy on container images, both failing the pipeline on high severity. Every suppression is inline with a stated reason. Eight ACR findings are skipped because they require the Premium SKU (private networking, zone redundancy, retention policies, geo-replication, content trust, dedicated data endpoints, quarantine) and one because image scanning is covered by Trivy rather than Defender for Containers.
+**Scanning.** Checkov on Terraform and Trivy on container images. Every suppression is inline with a stated reason. Eight ACR findings are skipped because they require the Premium SKU (private networking, zone redundancy, retention policies, geo-replication, content trust, dedicated data endpoints, quarantine) and one because image scanning is covered by Trivy rather than Defender for Containers.
 
-**Image hardening.** Multi-stage build, non-root user, dropped capabilities, no privilege escalation, 20MB final image.
+**Image hardening.** Alpine build, non-root user, dropped capabilities, no privilege escalation, 20MB final image.
 
 ---
 
@@ -146,7 +146,6 @@ Three things are created by hand because Terraform cannot create its own backend
 
 ```bash
 make init
-make bootstrap    # ACR and the ExternalDNS identity
 make up           # platform, then ArgoCD, then kubeconfig
 make down         # destroys the platform stack only
 ```
