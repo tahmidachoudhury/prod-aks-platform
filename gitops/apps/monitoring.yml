@@ -46,8 +46,6 @@ spec:
                   - grafana.azure.tahmidchoudhury.uk
                 secretName: grafana-tls
         prometheusOperator:
-          admissionWebhooks:
-            enabled: false
           resources:
             requests:
               cpu: 50m
