@@ -44,7 +44,7 @@ jobs:
         run: |
           set +e
           terraform plan \
-            -var-file=envs/dev.tfvars \
+            -var-file=platform/envs/dev.tfvars \
             -out=tfplan
           EXIT_CODE=$?
           if [ $EXIT_CODE -eq 1 ]; then
@@ -67,11 +67,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Wait for deployment
-        run: sleep 60
-
-      - name: Wait for ArgoCD sync
+      - name: Check application endpoint
         run: |
-          argocd app wait whoami \
-            --health --sync \
-            --timeout 300
+          URL="https://2048.azure.tahmidchoudhury.uk"
+          MAX_RETRIES=10
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$URL" || echo "000")
+
+            if [ "$CODE" = "200" ]; then
+              echo "Endpoint healthy (HTTP $CODE)"
+              exit 0
+            fi
+
+            echo "Attempt $i/$MAX_RETRIES: HTTP $CODE"
+            sleep 30
+          done
+
+          echo "Endpoint did not become healthy after $MAX_RETRIES attempts"
+          exit 1

@@ -76,7 +76,7 @@ jobs:
         id: plan
         run: |
           terraform plan \
-            -var-file=envs/dev.tfvars \
+            -var-file=platform/envs/dev.tfvars \
         continue-on-error: true
 
       - name: Check plan status

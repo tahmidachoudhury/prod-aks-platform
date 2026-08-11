@@ -44,7 +44,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Destory
-        run: terraform destroy -var-file="envs/dev.tfvars" --auto-approve
+        run: terraform destroy -var-file="platform/envs/dev.tfvars" --auto-approve
 
       - name: Destroy summary
         run: |
