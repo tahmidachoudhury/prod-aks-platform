@@ -28,7 +28,7 @@ A production-style Kubernetes platform on Azure, provisioned entirely from code.
 | ---------------- | ------------------------------------------------------------------- |
 | Infrastructure   | AKS 1.35, Virtual Network, NSG, Azure Container Registry, Azure DNS |
 | Cluster platform | ArgoCD, ingress-nginx, cert-manager, ExternalDNS                    |
-| Observability    | Grafana, kube-state-metrics, node-exporter                          |
+| Observability    | Grafana, Prometheus, kube-state-metrics, node-exporter              |
 | CI/CD            | GitHub Actions with OIDC federation, Checkov, Trivy                 |
 | Networking       | Azure CNI Overlay with Cilium dataplane, Standard Load Balancer     |
 
