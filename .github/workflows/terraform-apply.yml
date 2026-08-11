@@ -54,7 +54,8 @@ jobs:
           exit 0
 
       - name: Terraform Apply
-        run: terraform apply -var-file="envs/dev.tfvars" --auto-approve tfplan
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./infra/platform
 
       - name: Terraform Output
         run: terraform output
