@@ -10,13 +10,10 @@ resource "helm_release" "argocd" {
   timeout = 600
 
   values = [yamlencode({
-    global = {
-      domain = "argocd.${var.cluster_name}.local"
-    }
-
     configs = {
       params = {
-        # Ingress and TLS come later; run the server insecure behind
+        # TLS terminates at ingress-nginx; running the server without its own
+        # TLS avoids a redirect loop.
         "server.insecure" = true
       }
     }
