@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./infra
+        working-directory: ./infra/platform
 
     steps:
       - name: Checkout Code
@@ -76,7 +76,7 @@ jobs:
         id: plan
         run: |
           terraform plan \
-            -var-file=platform/envs/dev.tfvars \
+            -var-file=envs/dev.tfvars \
         continue-on-error: true
 
       - name: Check plan status

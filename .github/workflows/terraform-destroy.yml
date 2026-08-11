@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./infra
+        working-directory: ./infra/platform
 
     steps:
       - name: Checkout Code
@@ -44,7 +44,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Destory
-        run: terraform destroy -var-file="platform/envs/dev.tfvars" --auto-approve
+        run: terraform destroy -var-file="envs/dev.tfvars" --auto-approve
 
       - name: Destroy summary
         run: |

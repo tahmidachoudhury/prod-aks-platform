@@ -20,7 +20,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./infra
+        working-directory: ./infra/platform
 
     steps:
       - name: Checkout code
@@ -44,7 +44,7 @@ jobs:
         run: |
           set +e
           terraform plan \
-            -var-file=platform/envs/dev.tfvars \
+            -var-file=envs/dev.tfvars \
             -out=tfplan
           EXIT_CODE=$?
           if [ $EXIT_CODE -eq 1 ]; then
@@ -55,7 +55,6 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ./infra/platform
 
       - name: Terraform Output
         run: terraform output
