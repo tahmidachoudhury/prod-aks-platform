@@ -10,16 +10,21 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
   security-events: write
 
 env:
   ACR_NAME: "acrtahmidaks"
   IMAGE_NAME: "2048-app"
+  MANIFEST_PATH: "gitops/2048-app/deployment.yml"
 
 jobs:
   build_scan_push_to_ACR:
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: docker-build-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout Repository
@@ -28,9 +33,9 @@ jobs:
       - name: Azure login
         uses: azure/login@v3
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Azure CLI Login to ACR
         run: az acr login --name ${{ env.ACR_NAME }}
@@ -40,13 +45,13 @@ jobs:
         with:
           context: ./app
           file: ./app/Dockerfile
-          tags: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           load: true
 
       - name: Scan Docker image for vulnerabilities with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          image-ref: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           format: "sarif"
           output: "trivy-results.sarif"
           exit-code: "0"
@@ -65,6 +70,37 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: |
-            ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Update image tag in gitops manifest
+        run: |
+          IMAGE="${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}"
+
+          # Fail loudly if the manifest does not contain the expected image line,
+          # rather than silently committing nothing.
+          if ! grep -q "image: ${IMAGE}:" "${{ env.MANIFEST_PATH }}"; then
+            echo "No matching image line found in ${{ env.MANIFEST_PATH }}"
+            exit 1
+          fi
+
+          sed -i "s|image: ${IMAGE}:.*|image: ${IMAGE}:${{ github.sha }}|" "${{ env.MANIFEST_PATH }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ env.MANIFEST_PATH }}"
+
+          if git diff --staged --quiet; then
+            echo "Manifest already at ${{ github.sha }}, nothing to commit"
+            exit 0
+          fi
+
+          git commit -m "chore: deploy ${{ env.IMAGE_NAME }} ${{ github.sha }} [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Image: \`${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Manifest updated. ArgoCD will sync within 3 minutes." >> $GITHUB_STEP_SUMMARY
